@@ -1,0 +1,34 @@
+scalar Date
+
+input MessageInput {
+    content: String!
+    parent: String!
+    sender: String!
+}
+
+input ReplyMessageInput {
+    content: String!
+    parent: String!
+}
+
+type Message {
+    id: String!
+    content: String!
+    parent: String!
+    sender: String!
+    createdAt: Date!
+    updatedAt: Date!
+}
+
+type Query {
+    message(id: String!): Message!
+    messages: [Message!]!
+    messagesByParent(parent: String!): [Message!]!
+}
+
+type Mutation {
+    createMessage(input: MessageInput!): Message!
+    replyMessage(input: ReplyMessageInput!): Message!
+    deleteMessage(id: String!): Message!
+    updateMessage(id: String!, content: String!): Message!
+}
