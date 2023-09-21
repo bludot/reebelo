@@ -6,12 +6,15 @@ import {GraphQLModule} from '@nestjs/graphql';
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo';
 import {upperDirectiveTransformer} from '../modules/common/directives/upper-case.directive';
 import * as path from 'path';
+import {UserGraphqlModule} from "../modules/user-graphql/user-graphql.module";
+import {TypeormConnector2Module} from "../modules/mysql-connector2/mysql-connector2.module";
 import {HelloAPIModule} from "../modules/hello-api/hello-api.module";
-
+import { AuthGraphqlModule } from '../modules/auth-graphql/auth.graphql.module';
 
 @Module({
     imports: [
         HealthcheckModule,
+        TypeormConnector2Module,
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
             playground: true,
@@ -20,7 +23,7 @@ import {HelloAPIModule} from "../modules/hello-api/hello-api.module";
                     ? ['./src/**/*.graphql']
                     : [process.cwd() + '/**/*.graphql'],
             transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
-            // autoSchemaFile: path.join(process.cwd(), 'src/schema.graphql'),
+            //autoSchemaFile: path.join(process.cwd(), 'src/schema.graphql'),
             definitions: {
                 path: path.join(process.cwd(), 'src/graphql.ts'),
                 outputAs: 'class',
@@ -34,7 +37,9 @@ export class ServerModule {
             module: ServerModule,
             imports: [
                 ...(config ? [HealthcheckModule] : [HealthcheckModule]),
-                HelloAPIModule
+                HelloAPIModule,
+                AuthGraphqlModule,
+                UserGraphqlModule
             ],
         };
     }

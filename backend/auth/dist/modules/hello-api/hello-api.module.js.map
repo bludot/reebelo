@@ -1,1 +1,0 @@
-{"version":3,"file":"hello-api.module.js","sourceRoot":"","sources":["../../../src/modules/hello-api/hello-api.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAuC;AACvC,iEAAwD;AACxD,2DAAsD;AAM/C,IAAM,cAAc,4BAApB,MAAM,cAAc;CAAG,CAAA;yBAAjB,cAAc;IAJ1B,IAAA,eAAM,EAAC;QACN,WAAW,EAAE,CAAC,sCAAe,CAAC;QAC9B,SAAS,EAAE,CAAC,qCAAiB,CAAC;KAC/B,CAAC;GACW,cAAc,CAAG"}

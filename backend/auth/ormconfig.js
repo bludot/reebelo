@@ -28,8 +28,8 @@ const config = {
   database: process.env.DBDATABASE,
   ...(process.env.ENV !== 'local' ? ssl : {}),
   synchronize: false,
-  entities: ['dist/modules/**/*.entity.{ts,js}'],
-  migrations: ['dist/migrations/*.{ts,js}'],
+  entities: ['dist/src/modules/**/*.entity.{ts,js}'],
+  migrations: ['dist/src/migrations/*.{ts,js}'],
 };
 const datasource = new DataSource(config);
 

@@ -1,0 +1,22 @@
+scalar Date
+input RegisterInput {
+    username: String!
+    password: String!
+}
+
+input SignInInput {
+    username: String!
+    password: String!
+}
+
+type AccessToken {
+    token: String!
+    exp: Date!
+    refreshToken: String!
+}
+
+type Mutation {
+    register(input: RegisterInput): Boolean!
+    signIn(input: SignInInput): AccessToken!
+    refreshToken(token: String!): AccessToken!
+}
