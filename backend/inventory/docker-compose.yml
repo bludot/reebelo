@@ -1,0 +1,60 @@
+version: "2.2"
+services:
+  api:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: 'Dockerfile.local'
+    command: "/bin/bash -c 'yarn && yarn build && ENV=docker yarn typeorm migration:run -d ormconfig.js && yarn start:dev'"
+    #command: "/bin/bash -c 'yarn && yarn build && yarn start:dev'"
+    env_file: .env
+    depends_on:
+      - mysql
+    volumes:
+      - '.:/usr/src/app'
+      - 'inventory-api_deps:/usr/src/app/node_modules'
+      - './storage:/storage'
+    ports:
+      - '1337:3000'
+    networks:
+      - inventory-api-network
+  mysql:
+    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0.33
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecretpassword
+      - MYSQL_USER=inventory
+      - MYSQL_PASSWORD=mysecretpassword
+      - MYSQL_DATABASE=inventory
+    volumes:
+      - 'inventory-api_db:/var/lib/mysql'
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - inventory-api-network
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - inventory-api-network
+  redis:
+    image: redis:5.0.5
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+    volumes:
+      - './redis.conf:/etc/redis/redis.conf'
+      - redis_data:/data
+    networks:
+      - inventory-api-network
+
+networks:
+  inventory-api-network:
+volumes:
+  inventory-api_deps:
+  inventory-api_db:
+  redis_data:
+  inventory-api_postgres:

@@ -1,4 +1,4 @@
-name: ci
+name: ci - auth
 
 on:
   push:
