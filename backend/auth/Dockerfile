@@ -8,6 +8,7 @@ COPY yarn.lock yarn.lock
 COPY src src
 COPY tsconfig.json tsconfig.json
 COPY tsconfig.build.json tsconfig.build.json
+COPY schema.graphql schema.graphql
 
 RUN apk update && apk add bash
 RUN yarn install --production=false
