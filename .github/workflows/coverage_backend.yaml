@@ -1,0 +1,36 @@
+name: 'coverage-backend'
+on:
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    working-directory: ./backend
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # copy .env.template to .env
+      - name: Copy .env.template to .env
+        run: cp .env.template .env
+      - uses: isbang/compose-action@v1.5.0
+        with:
+          compose-file: "./backend/docker-compose.yml"
+          services: |
+            mysql
+      - name: Sleep
+        run: sleep 5
+      - name: yarn install and build
+        run: |
+          yarn install
+          yarn build
+          ENV=local DBUSERNAME=zealthy DBDATABASE=test DBPASSWORD=mysecretpassword yarn typeorm migration:run -d ormconfig.js
+      - name: yarn test
+        env:
+          DBHOST: localhost
+          DBDATABASE: test
+        run: |
+          yarn test:cov
