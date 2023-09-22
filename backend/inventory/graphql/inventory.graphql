@@ -28,7 +28,8 @@ type Mutation {
 }
 
 type Query {
-    inventory(id: String!): Inventory
+    inventory: [Inventory!]!
+    inventoryById(id: String!): Inventory
     inventoryByName(name: String!): Inventory!
     inventoryByCategory(category: String!): [Inventory!]
 }

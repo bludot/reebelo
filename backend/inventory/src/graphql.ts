@@ -44,7 +44,9 @@ export class Order {
 export abstract class IQuery {
     abstract hello(): string | Promise<string>;
 
-    abstract inventory(id: string): Nullable<Inventory> | Promise<Nullable<Inventory>>;
+    abstract inventory(): Inventory[] | Promise<Inventory[]>;
+
+    abstract inventoryById(id: string): Nullable<Inventory> | Promise<Nullable<Inventory>>;
 
     abstract inventoryByName(name: string): Inventory | Promise<Inventory>;
 
@@ -74,4 +76,6 @@ export abstract class IMutation {
     abstract updateInventoryQuantity(input: UpdateInventoryQuantityInput): Inventory | Promise<Inventory>;
 }
 
+export type _Any = any;
+export type _FieldSet = any;
 type Nullable<T> = T | null;
