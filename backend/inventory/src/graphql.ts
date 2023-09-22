@@ -34,6 +34,13 @@ export class UpdateInventoryQuantityInput {
     quantity: number;
 }
 
+export class Order {
+    id: string;
+    itemIds: string[];
+    quantity: number[];
+    items: Inventory[];
+}
+
 export abstract class IQuery {
     abstract hello(): string | Promise<string>;
 
@@ -67,6 +74,4 @@ export abstract class IMutation {
     abstract updateInventoryQuantity(input: UpdateInventoryQuantityInput): Inventory | Promise<Inventory>;
 }
 
-export type _Any = any;
-export type _FieldSet = any;
 type Nullable<T> = T | null;

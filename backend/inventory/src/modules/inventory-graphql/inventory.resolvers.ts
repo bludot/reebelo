@@ -1,7 +1,7 @@
 import {Inject, UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {Logger} from 'winston';
-import {CreateInventoryInput, Inventory, UpdateInventoryInput} from '../../graphql';
+import {CreateInventoryInput, Inventory, Order, UpdateInventoryInput} from '../../graphql';
 import {AuthGraphqlGuard} from '../auth/auth.graphql.guard';
 import {InventoryService} from "../inventory/inventory.service";
 
@@ -12,6 +12,31 @@ export class InventoryResolvers {
         private readonly inventoryService: InventoryService,
     ) {
     }
+
+    @Query()
+    @Resolver('Order')
+    async orders(@Args('itemIds') ids: string[], @Args('quantity') quantity: number[]): Promise<Order> {
+        this.logger.info('Getting inventory by item ids');
+        const inventory = await this.inventoryService.getInventoryByIDs(ids);
+        return {
+            id: '1',
+            itemIds: ids,
+            items: inventory.map((inventory, index) => ({
+                id: inventory.id,
+                name: inventory.name,
+                description: inventory.description,
+                price: inventory.price,
+                quantity: quantity[index],
+                category: inventory.category,
+                image: inventory.image,
+                createdAt: inventory.createdAt,
+                updatedAt: inventory.updatedAt,
+            })),
+            quantity: quantity,
+
+        }
+    }
+
 
     @Mutation('createInventory')
     @UseGuards(AuthGraphqlGuard)

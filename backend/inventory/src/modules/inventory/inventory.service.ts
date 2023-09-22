@@ -113,5 +113,14 @@ export class InventoryService {
         return inventory;
     }
 
+    async getInventoryByIDs(ids: string[]): Promise<InventoryEntity[]> {
+        this.logger.info('Getting inventory by ids');
+        const inventory: InventoryEntity[] = await this.ticketRepository.getInventoryByIDs(
+            ids,
+        );
+
+        return inventory;
+    }
+
 
 }
