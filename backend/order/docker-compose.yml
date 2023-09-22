@@ -1,0 +1,60 @@
+version: "2.2"
+services:
+  api:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: 'Dockerfile.local'
+    command: "/bin/bash -c 'yarn && yarn build && ENV=docker yarn typeorm migration:run -d ormconfig.js && yarn start:dev'"
+    #command: "/bin/bash -c 'yarn && yarn build && yarn start:dev'"
+    env_file: .env
+    depends_on:
+      - mysql
+    volumes:
+      - '.:/usr/src/app'
+      - 'order-api_deps:/usr/src/app/node_modules'
+      - './storage:/storage'
+    ports:
+      - '1337:3000'
+    networks:
+      - order-api-network
+  mysql:
+    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0.33
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecretpassword
+      - MYSQL_USER=order
+      - MYSQL_PASSWORD=mysecretpassword
+      - MYSQL_DATABASE=order
+    volumes:
+      - 'order-api_db:/var/lib/mysql'
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - order-api-network
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - order-api-network
+  redis:
+    image: redis:5.0.5
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+    volumes:
+      - './redis.conf:/etc/redis/redis.conf'
+      - redis_data:/data
+    networks:
+      - order-api-network
+
+networks:
+  order-api-network:
+volumes:
+  order-api_deps:
+  order-api_db:
+  redis_data:
+  order-api_postgres:

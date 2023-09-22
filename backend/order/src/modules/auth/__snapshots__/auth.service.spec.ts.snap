@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthService register should throw an error if the user already exists 1`] = `"User already exists"`;
+
+exports[`AuthService signIn should throw an error if the password is invalid 1`] = `"Unauthorized"`;
+
+exports[`AuthService signIn should throw an error if the user does not exist 1`] = `"Unauthorized"`;

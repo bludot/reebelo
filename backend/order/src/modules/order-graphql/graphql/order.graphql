@@ -1,0 +1,61 @@
+scalar Date
+
+enum OrderStatus {
+    CREATED
+    PENDING
+    COMPLETED
+    CANCELLED
+    DELIVERED
+}
+
+type Order @key(fields: "id") {
+    id: String!
+    parentId: String
+    userId: String!
+    address: String!
+    trackingNumber: String
+    itemIds: [String!]!
+    quantity: [Int!]!
+    status: OrderStatus!
+    createdAt: Date!
+    updatedAt: Date!
+}
+
+
+type Mutation {
+    updateOrderStatus(input: UpdateOrderStatusInput!): Order
+    createOrder(input: CreateOrderInput!): Order
+    updateOrder(input: UpdateOrderInput!): Order
+    deleteOrder(input: DeleteOrderInput!): Order
+}
+
+type Query {
+    order(id: String!): Order
+    ordersByUser(userId: String!): [Order]
+}
+
+input UpdateOrderStatusInput {
+    id: String!
+    status: OrderStatus!
+}
+
+input CreateOrderInput {
+    userId: String!
+    parentId: String
+    address: String
+    itemId: String
+    quantity: Int
+}
+
+input UpdateOrderInput {
+    id: String!
+    parentId: String
+    address: String
+    itemId: String
+    quantity: Int
+}
+
+input DeleteOrderInput {
+    id: String!
+}
+
