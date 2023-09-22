@@ -5,7 +5,7 @@ import {CreateInventoryInput, Inventory, Order, UpdateInventoryInput} from '../.
 import {AuthGraphqlGuard} from '../auth/auth.graphql.guard';
 import {InventoryService} from "../inventory/inventory.service";
 
-@Resolver()
+@Resolver('Inventory')
 export class InventoryResolvers {
     constructor(
         @Inject('winston') private readonly logger: Logger,
@@ -65,6 +65,23 @@ export class InventoryResolvers {
     }
 
     @Query('inventory')
+    async getInventory(): Promise<Inventory[]> {
+        this.logger.info('Getting inventory');
+        const inventory = await this.inventoryService.getAllInventory();
+
+        return inventory.map((inventory) => ({
+            id: inventory.id,
+            name: inventory.name,
+            description: inventory.description,
+            price: inventory.price,
+            quantity: inventory.quantity,
+            category: inventory.category,
+            image: inventory.image,
+            createdAt: inventory.createdAt,
+            updatedAt: inventory.updatedAt,
+        }));
+    }
+    @Query('inventoryById')
     async getInventoryByID(@Args('id') id: string): Promise<Inventory> {
         this.logger.info('Getting inventory by id');
         const inventory = await this.inventoryService.getInventoryByID(id);

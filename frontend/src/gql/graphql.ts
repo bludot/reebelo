@@ -24,49 +24,75 @@ export type AccessToken = {
   token: Scalars['String']['output'];
 };
 
-export type Message = {
-  __typename?: 'Message';
-  content: Scalars['String']['output'];
-  createdAt: Scalars['Date']['output'];
-  id: Scalars['String']['output'];
-  parent: Scalars['String']['output'];
-  sender: Scalars['String']['output'];
-  updatedAt: Scalars['Date']['output'];
+export type CreateInventoryInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  description: Scalars['String']['input'];
+  image?: InputMaybe<Scalars['String']['input']>;
+  misc?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  price: Scalars['Int']['input'];
+  quantity: Scalars['Int']['input'];
 };
 
-export type MessageInput = {
-  content: Scalars['String']['input'];
-  parent: Scalars['String']['input'];
-  sender: Scalars['String']['input'];
+export type CreateOrderInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['String']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['String']['input'];
+};
+
+export type DeleteOrderInput = {
+  id: Scalars['String']['input'];
+};
+
+export type Inventory = {
+  __typename?: 'Inventory';
+  category?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['Date']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  misc?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  price: Scalars['Int']['output'];
+  quantity: Scalars['Int']['output'];
+  updatedAt: Scalars['Date']['output'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createMessage: Message;
-  createTicket: Ticket;
-  deleteMessage: Message;
+  createInventory: Inventory;
+  createOrder?: Maybe<Order>;
+  deleteInventory: Inventory;
+  deleteOrder?: Maybe<Order>;
   refreshToken: AccessToken;
   register: Scalars['Boolean']['output'];
-  replyMessage: Message;
   signIn: AccessToken;
-  updateMessage: Message;
-  updateTicketPriority: Ticket;
-  updateTicketStatus: Ticket;
+  updateInventory: Inventory;
+  updateInventoryQuantity: Inventory;
+  updateOrder?: Maybe<Order>;
+  updateOrderStatus?: Maybe<Order>;
 };
 
 
-export type MutationCreateMessageArgs = {
-  input: MessageInput;
+export type MutationCreateInventoryArgs = {
+  input: CreateInventoryInput;
 };
 
 
-export type MutationCreateTicketArgs = {
-  input?: InputMaybe<TicketInput>;
+export type MutationCreateOrderArgs = {
+  input: CreateOrderInput;
 };
 
 
-export type MutationDeleteMessageArgs = {
+export type MutationDeleteInventoryArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteOrderArgs = {
+  input: DeleteOrderInput;
 };
 
 
@@ -80,74 +106,87 @@ export type MutationRegisterArgs = {
 };
 
 
-export type MutationReplyMessageArgs = {
-  input: ReplyMessageInput;
-};
-
-
 export type MutationSignInArgs = {
   input?: InputMaybe<SignInInput>;
 };
 
 
-export type MutationUpdateMessageArgs = {
-  content: Scalars['String']['input'];
-  id: Scalars['String']['input'];
+export type MutationUpdateInventoryArgs = {
+  input: UpdateInventoryInput;
 };
 
 
-export type MutationUpdateTicketPriorityArgs = {
-  id: Scalars['String']['input'];
-  priority: Priority;
+export type MutationUpdateInventoryQuantityArgs = {
+  input: UpdateInventoryQuantityInput;
 };
 
 
-export type MutationUpdateTicketStatusArgs = {
-  id: Scalars['String']['input'];
-  status: Status;
+export type MutationUpdateOrderArgs = {
+  input: UpdateOrderInput;
 };
 
-export enum Priority {
-  High = 'HIGH',
-  Low = 'LOW',
-  Medium = 'MEDIUM'
+
+export type MutationUpdateOrderStatusArgs = {
+  input: UpdateOrderStatusInput;
+};
+
+export type Order = {
+  __typename?: 'Order';
+  address: Scalars['String']['output'];
+  createdAt: Scalars['Date']['output'];
+  id: Scalars['String']['output'];
+  itemIds: Array<Scalars['String']['output']>;
+  items: Array<Inventory>;
+  parentId?: Maybe<Scalars['String']['output']>;
+  quantity: Array<Scalars['Int']['output']>;
+  status: OrderStatus;
+  trackingNumber?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['Date']['output'];
+  userId: Scalars['String']['output'];
+};
+
+export enum OrderStatus {
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  Created = 'CREATED',
+  Delivered = 'DELIVERED',
+  Pending = 'PENDING'
 }
 
 export type Query = {
   __typename?: 'Query';
-  message: Message;
-  messages: Array<Message>;
-  messagesByParent: Array<Message>;
+  hello: Scalars['String']['output'];
+  inventory?: Maybe<Inventory>;
+  inventoryByCategory?: Maybe<Array<Inventory>>;
+  inventoryByName: Inventory;
+  order?: Maybe<Order>;
+  ordersByUser?: Maybe<Array<Maybe<Order>>>;
   profile: User;
-  ticket: Ticket;
-  tickets?: Maybe<Array<Ticket>>;
-  ticketsByEmail?: Maybe<Array<Ticket>>;
-  ticketsByStatus?: Maybe<Array<Ticket>>;
 };
 
 
-export type QueryMessageArgs = {
+export type QueryInventoryArgs = {
   id: Scalars['String']['input'];
 };
 
 
-export type QueryMessagesByParentArgs = {
-  parent: Scalars['String']['input'];
+export type QueryInventoryByCategoryArgs = {
+  category: Scalars['String']['input'];
 };
 
 
-export type QueryTicketArgs = {
+export type QueryInventoryByNameArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+export type QueryOrderArgs = {
   id: Scalars['String']['input'];
 };
 
 
-export type QueryTicketsByEmailArgs = {
-  email: Scalars['String']['input'];
-};
-
-
-export type QueryTicketsByStatusArgs = {
-  status: Status;
+export type QueryOrdersByUserArgs = {
+  userId: Scalars['String']['input'];
 };
 
 export type RegisterInput = {
@@ -155,39 +194,38 @@ export type RegisterInput = {
   username: Scalars['String']['input'];
 };
 
-export type ReplyMessageInput = {
-  content: Scalars['String']['input'];
-  parent: Scalars['String']['input'];
-};
-
 export type SignInInput = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
 };
 
-export enum Status {
-  InProgress = 'IN_PROGRESS',
-  New = 'NEW',
-  Resolved = 'RESOLVED'
-}
-
-export type Ticket = {
-  __typename?: 'Ticket';
-  createdAt: Scalars['Date']['output'];
-  description: Scalars['String']['output'];
-  email: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  priority: Priority;
-  status: Status;
-  title: Scalars['String']['output'];
-  updatedAt: Scalars['Date']['output'];
+export type UpdateInventoryInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  image?: InputMaybe<Scalars['String']['input']>;
+  misc?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Int']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type TicketInput = {
-  description: Scalars['String']['input'];
-  email: Scalars['String']['input'];
-  priority: Priority;
-  title: Scalars['String']['input'];
+export type UpdateInventoryQuantityInput = {
+  id: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+};
+
+export type UpdateOrderInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['String']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UpdateOrderStatusInput = {
+  id: Scalars['String']['input'];
+  status: OrderStatus;
 };
 
 export type User = {
@@ -204,13 +242,6 @@ export type SignInMutationVariables = Exact<{
 
 export type SignInMutation = { __typename?: 'Mutation', signIn: { __typename?: 'AccessToken', token: string, refreshToken: string, exp: any } };
 
-export type TicketsByStatusQueryVariables = Exact<{
-  status: Status;
-}>;
-
-
-export type TicketsByStatusQuery = { __typename?: 'Query', ticketsByStatus?: Array<{ __typename?: 'Ticket', id: string, title: string, description: string, status: Status, priority: Priority, email: string, createdAt: any, updatedAt: any }> | null };
-
 export type RefreshTokensMutationVariables = Exact<{
   refreshToken: Scalars['String']['input'];
 }>;
@@ -223,66 +254,7 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, username: string, uid: string } };
 
-export type CreateTicketMutationVariables = Exact<{
-  input: TicketInput;
-}>;
-
-
-export type CreateTicketMutation = { __typename?: 'Mutation', createTicket: { __typename?: 'Ticket', id: string, title: string, description: string, status: Status, priority: Priority, createdAt: any, updatedAt: any } };
-
-export type TicketByIdQueryVariables = Exact<{
-  id: Scalars['String']['input'];
-}>;
-
-
-export type TicketByIdQuery = { __typename?: 'Query', ticket: { __typename?: 'Ticket', id: string, title: string, description: string, status: Status, email: string, priority: Priority, createdAt: any, updatedAt: any } };
-
-export type GetMessagesByParentQueryVariables = Exact<{
-  parent: Scalars['String']['input'];
-}>;
-
-
-export type GetMessagesByParentQuery = { __typename?: 'Query', messagesByParent: Array<{ __typename?: 'Message', id: string, parent: string, content: string, sender: string, createdAt: any, updatedAt: any }> };
-
-export type ReplyMessageMutationVariables = Exact<{
-  input: ReplyMessageInput;
-}>;
-
-
-export type ReplyMessageMutation = { __typename?: 'Mutation', replyMessage: { __typename?: 'Message', id: string, parent: string, content: string, sender: string, createdAt: any, updatedAt: any } };
-
-export type CreateMessageMutationVariables = Exact<{
-  input: MessageInput;
-}>;
-
-
-export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: string, parent: string, content: string, sender: string, createdAt: any, updatedAt: any } };
-
-export type UpdateTicketStatusMutationVariables = Exact<{
-  id: Scalars['String']['input'];
-  status: Status;
-}>;
-
-
-export type UpdateTicketStatusMutation = { __typename?: 'Mutation', updateTicketStatus: { __typename?: 'Ticket', id: string, title: string, description: string, status: Status, priority: Priority, createdAt: any, updatedAt: any } };
-
-export type UpdateTicketPriorityMutationVariables = Exact<{
-  id: Scalars['String']['input'];
-  priority: Priority;
-}>;
-
-
-export type UpdateTicketPriorityMutation = { __typename?: 'Mutation', updateTicketPriority: { __typename?: 'Ticket', id: string, title: string, description: string, status: Status, priority: Priority, createdAt: any, updatedAt: any } };
-
 
 export const SignInDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"signIn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SignInInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signIn"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}},{"kind":"Field","name":{"kind":"Name","value":"exp"}}]}}]}}]} as unknown as DocumentNode<SignInMutation, SignInMutationVariables>;
-export const TicketsByStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ticketsByStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Status"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ticketsByStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<TicketsByStatusQuery, TicketsByStatusQueryVariables>;
 export const RefreshTokensDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshTokens"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"refreshToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"refreshToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}},{"kind":"Field","name":{"kind":"Name","value":"exp"}}]}}]}}]} as unknown as DocumentNode<RefreshTokensMutation, RefreshTokensMutationVariables>;
 export const ProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"uid"}}]}}]}}]} as unknown as DocumentNode<ProfileQuery, ProfileQueryVariables>;
-export const CreateTicketDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createTicket"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TicketInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTicket"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<CreateTicketMutation, CreateTicketMutationVariables>;
-export const TicketByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ticketById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ticket"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<TicketByIdQuery, TicketByIdQueryVariables>;
-export const GetMessagesByParentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMessagesByParent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"parent"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"messagesByParent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"parent"},"value":{"kind":"Variable","name":{"kind":"Name","value":"parent"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"parent"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetMessagesByParentQuery, GetMessagesByParentQueryVariables>;
-export const ReplyMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"replyMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ReplyMessageInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"replyMessage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"parent"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<ReplyMessageMutation, ReplyMessageMutationVariables>;
-export const CreateMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MessageInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMessage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"parent"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<CreateMessageMutation, CreateMessageMutationVariables>;
-export const UpdateTicketStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateTicketStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Status"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketStatusMutation, UpdateTicketStatusMutationVariables>;
-export const UpdateTicketPriorityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateTicketPriority"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"priority"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Priority"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketPriority"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"priority"},"value":{"kind":"Variable","name":{"kind":"Name","value":"priority"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketPriorityMutation, UpdateTicketPriorityMutationVariables>;
