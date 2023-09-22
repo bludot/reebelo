@@ -23,6 +23,7 @@ WORKDIR /usr/src/app
 RUN apk add --no-cache tini
 COPY package.json package.json
 COPY yarn.lock yarn.lock
+COPY schema.graphql schema.graphql
 COPY --from=build /usr/src/app/dist ./
 COPY ormconfig.js ./ormconfig.js
 COPY graphql ./graphql
