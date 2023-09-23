@@ -137,7 +137,7 @@ export class OrderResolvers {
     @Query('ordersByUser')
     @UseGuards(AuthGraphqlGuard)
     async getOrdersByUser(@Args('userId') userId: string): Promise<Order[]> {
-        this.logger.info('Getting orders by user id');
+        this.logger.info('Getting orders by user id', {userId});
         const orders = await this.orderService.findByUserID(userId);
         const parentOrders: Order[] = orders.filter((o) => o.parentId === null).map((o: OrderEntity): Order => ({
             id: o.id,
