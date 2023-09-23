@@ -14,8 +14,8 @@ type Order @key(fields: "id") {
     userId: String!
     address: String!
     trackingNumber: String
-    itemIds: [String!]!
-    quantity: [Int!]!
+    itemIds: [String]
+    quantity: [Int]
     status: OrderStatus!
     createdAt: Date!
     updatedAt: Date!

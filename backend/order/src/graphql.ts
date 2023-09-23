@@ -55,8 +55,8 @@ export class Order {
     userId: string;
     address: string;
     trackingNumber?: Nullable<string>;
-    itemIds: string[];
-    quantity: number[];
+    itemIds?: Nullable<Nullable<string>[]>;
+    quantity?: Nullable<Nullable<number>[]>;
     status: OrderStatus;
     createdAt: Date;
     updatedAt: Date;
@@ -72,4 +72,6 @@ export abstract class IMutation {
     abstract deleteOrder(input: DeleteOrderInput): Nullable<Order> | Promise<Nullable<Order>>;
 }
 
+export type _Any = any;
+export type _FieldSet = any;
 type Nullable<T> = T | null;
