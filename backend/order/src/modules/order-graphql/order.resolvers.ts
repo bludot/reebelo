@@ -45,7 +45,7 @@ export class OrderResolvers {
                 trackingNumber: parentOrder.trackingNumber,
                 itemIds: [order.itemId],
                 quantity: [order.quantity],
-                status: GQLOrderStatus[parentOrder.status],
+                status: GQLOrderStatus[parentOrder.status.toUpperCase()],
                 createdAt: parentOrder.createdAt,
                 updatedAt: parentOrder.updatedAt,
             }
