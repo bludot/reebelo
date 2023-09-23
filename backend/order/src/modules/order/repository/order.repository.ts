@@ -48,7 +48,7 @@ export const customOrderRepositoryMethods: Pick<
     },
 
     findByID(id: string): Promise<OrderEntity> {
-        return this.findOneOrFail(id);
+        return this.findOne({where: {id}});
     },
 
     findByUserID(userId: string): Promise<OrderEntity[]> {

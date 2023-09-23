@@ -72,6 +72,4 @@ export abstract class IMutation {
     abstract deleteOrder(input: DeleteOrderInput): Nullable<Order> | Promise<Nullable<Order>>;
 }
 
-export type _Any = any;
-export type _FieldSet = any;
 type Nullable<T> = T | null;
