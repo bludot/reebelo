@@ -16,7 +16,7 @@ export class OrderResolvers {
     @ResolveReference()
     async resolveReference(reference: any): Promise<Order> {
         this.logger.info(`Getting inventory by item ids ${JSON.stringify(reference)} `);
-        const inventory = await this.inventoryService.getInventoryByIDs(itemids);
+        const inventory = await this.inventoryService.getInventoryByIDs(reference.itemids);
         return {
             id: reference.id,
             itemIds: reference.itemids,
