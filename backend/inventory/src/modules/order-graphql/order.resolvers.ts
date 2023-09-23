@@ -14,11 +14,11 @@ export class OrderResolvers {
     }
     ResolveReference
     @ResolveField('items')
-    async orders(@Parent() order: Order, @Args('itemids') itemids: string[], @Args('quantity') quantity: number[]): Promise<Inventory[]> {
+    async orders(@Parent() order: Order, @Args('itemids') itemids: string[], @Args('quantity') quantity: number[]): Promise<Order> {
         this.logger.info(`Getting inventory by item ids ${JSON.stringify(order)} | ${JSON.stringify(itemids)} | ${JSON.stringify(quantity)}`);
         const inventory = await this.inventoryService.getInventoryByIDs(itemids);
         return {
-            id: '1',
+            id: order.id,
             itemIds: itemids,
             items: inventory.map((inventory, index) => ({
                 id: inventory.id,
