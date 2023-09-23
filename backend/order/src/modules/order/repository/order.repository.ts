@@ -52,11 +52,11 @@ export const customOrderRepositoryMethods: Pick<
     },
 
     findByUserID(userId: string): Promise<OrderEntity[]> {
-        return this.find({userId});
+        return this.find({where: {userId}});
     },
 
     async deleteOrder(id: string): Promise<void> {
-        return this.delete(id);
+        return this.delete({where: {id}});
     },
 
     async updateOrderShipping(id: string, address: string, trackingNumber?: string): Promise<OrderEntity> {
