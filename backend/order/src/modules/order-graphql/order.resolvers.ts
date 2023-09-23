@@ -7,6 +7,24 @@ import {OrderService} from "../order/order.service";
 import {OrderStatus} from "../order/repository/order.repository";
 import {OrderEntity} from "../order/repository/order.entity";
 
+
+function dbOrderStatusToGQLOrderStatus(status: OrderStatus): GQLOrderStatus {
+    switch (status) {
+        case OrderStatus.CREATED:
+            return GQLOrderStatus.CREATED;
+        case OrderStatus.PENDING:
+            return GQLOrderStatus.PENDING;
+        case OrderStatus.COMPLETED:
+            return GQLOrderStatus.COMPLETED;
+        case OrderStatus.CANCELLED:
+            return GQLOrderStatus.CANCELLED;
+        case OrderStatus.DELIVERED:
+            return GQLOrderStatus.DELIVERED;
+        default:
+            throw new Error('Unknown order status');
+    }
+}
+
 @Resolver()
 export class OrderResolvers {
     constructor(
@@ -45,7 +63,7 @@ export class OrderResolvers {
                 trackingNumber: parentOrder.trackingNumber,
                 itemIds: [order.itemId],
                 quantity: [order.quantity],
-                status: GQLOrderStatus[parentOrder.status.toUpperCase()],
+                status: dbOrderStatusToGQLOrderStatus(OrderStatus[order.status]),
                 createdAt: parentOrder.createdAt,
                 updatedAt: parentOrder.updatedAt,
             }
@@ -68,10 +86,11 @@ export class OrderResolvers {
             trackingNumber: order.trackingNumber,
             itemIds: [order.itemId],
             quantity: [order.quantity],
-            status: GQLOrderStatus[order.status],
+            status: dbOrderStatusToGQLOrderStatus(OrderStatus[order.status]),
             createdAt: order.createdAt,
             updatedAt: order.updatedAt,
-        };
+        }
+
 
     }
 
@@ -89,7 +108,7 @@ export class OrderResolvers {
                 trackingNumber: order.trackingNumber,
                 itemIds: [order.itemId],
                 quantity: [order.quantity],
-                status: GQLOrderStatus[order.status],
+                status: dbOrderStatusToGQLOrderStatus(OrderStatus[order.status]),
                 createdAt: order.createdAt,
                 updatedAt: order.updatedAt,
             };
@@ -103,7 +122,7 @@ export class OrderResolvers {
             trackingNumber: order.trackingNumber,
             itemIds: [],
             quantity: [],
-            status: GQLOrderStatus[order.status],
+            status: dbOrderStatusToGQLOrderStatus(OrderStatus[order.status]),
             createdAt: order.createdAt,
             updatedAt: order.updatedAt,
         }
@@ -128,7 +147,7 @@ export class OrderResolvers {
             trackingNumber: o.trackingNumber,
             itemIds: [],
             quantity: [],
-            status: GQLOrderStatus[o.status],
+            status: dbOrderStatusToGQLOrderStatus(OrderStatus[o.status]),
             createdAt: o.createdAt,
             updatedAt: o.updatedAt,
 
@@ -226,7 +245,7 @@ export class OrderResolvers {
             trackingNumber: order.trackingNumber,
             itemIds: [order.itemId],
             quantity: [order.quantity],
-            status: GQLOrderStatus[order.status],
+            status: dbOrderStatusToGQLOrderStatus(OrderStatus[order.status]),
             createdAt: order.createdAt,
             updatedAt: order.updatedAt,
         };
@@ -246,7 +265,7 @@ export class OrderResolvers {
             trackingNumber: order.trackingNumber,
             itemIds: [order.itemId],
             quantity: [order.quantity],
-            status: GQLOrderStatus[order.status],
+            status: dbOrderStatusToGQLOrderStatus(OrderStatus[order.status]),
             createdAt: order.createdAt,
             updatedAt: order.updatedAt,
         };
