@@ -21,7 +21,7 @@ function dbOrderStatusToGQLOrderStatus(status: OrderStatus): GQLOrderStatus {
         case OrderStatus.DELIVERED:
             return GQLOrderStatus.DELIVERED;
         default:
-            throw new Error('Unknown order status');
+            return GQLOrderStatus.PENDING;
     }
 }
 
