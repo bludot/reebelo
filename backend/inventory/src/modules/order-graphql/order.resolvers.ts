@@ -1,5 +1,5 @@
 import {Inject, UseGuards} from '@nestjs/common';
-import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
+import {Args, Mutation, Parent, Query, ResolveField, ResolveReference, Resolver} from '@nestjs/graphql';
 import {Logger} from 'winston';
 import {CreateInventoryInput, Inventory, Order, UpdateInventoryInput} from '../../graphql';
 import {AuthGraphqlGuard} from '../auth/auth.graphql.guard';
@@ -13,13 +13,13 @@ export class OrderResolvers {
     ) {
     }
     ResolveReference
-    @ResolveField('items')
-    async orders(@Parent() order: Order, @Args('itemids') itemids: string[], @Args('quantity') quantity: number[]): Promise<Order> {
-        this.logger.info(`Getting inventory by item ids ${JSON.stringify(order)} | ${JSON.stringify(itemids)} | ${JSON.stringify(quantity)}`);
+    @ResolveReference()
+    async resolveReference(reference: any): Promise<Order> {
+        this.logger.info(`Getting inventory by item ids ${JSON.stringify(reference)} `);
         const inventory = await this.inventoryService.getInventoryByIDs(itemids);
         return {
-            id: order.id,
-            itemIds: itemids,
+            id: reference.id,
+            itemIds: reference.itemids,
             items: inventory.map((inventory, index) => ({
                 id: inventory.id,
                 name: inventory.name,
@@ -31,7 +31,7 @@ export class OrderResolvers {
                 createdAt: inventory.createdAt,
                 updatedAt: inventory.updatedAt,
             })),
-            quantity: order.quantity,
+            quantity: reference.quantity,
 
         }
     }
