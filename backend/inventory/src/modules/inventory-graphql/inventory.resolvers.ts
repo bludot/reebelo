@@ -13,28 +13,7 @@ export class InventoryResolvers {
     ) {
     }
     ResolveReference
-    @ResolveField('items')
-    async orders(@Parent() order: Order): Promise<Order> {
-        this.logger.info('Getting inventory by item ids');
-        const inventory = await this.inventoryService.getInventoryByIDs(order.itemIds);
-        return {
-            id: '1',
-            itemIds: order.itemIds,
-            items: inventory.map((inventory, index) => ({
-                id: inventory.id,
-                name: inventory.name,
-                description: inventory.description,
-                price: inventory.price,
-                quantity: order.quantity[index],
-                category: inventory.category,
-                image: inventory.image,
-                createdAt: inventory.createdAt,
-                updatedAt: inventory.updatedAt,
-            })),
-            quantity: order.quantity,
 
-        }
-    }
 
 
     @Mutation('createInventory')

@@ -9,6 +9,7 @@ import * as path from 'path';
 import {TypeormConnector2Module} from "../modules/mysql-connector2/mysql-connector2.module";
 import {HelloAPIModule} from "../modules/hello-api/hello-api.module";
 import {InventoryGraphqlModule} from "../modules/inventory-graphql/inventory-graphql.module";
+import {OrderGraphqlModule} from "../modules/order-graphql/order-graphql.module";
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ export class ServerModule {
                 ...(config ? [HealthcheckModule] : [HealthcheckModule]),
                 HelloAPIModule,
                 InventoryGraphqlModule,
+                OrderGraphqlModule,
             ],
         };
     }

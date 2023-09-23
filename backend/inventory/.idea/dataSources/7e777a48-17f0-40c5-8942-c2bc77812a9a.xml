@@ -1,48 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="auth@localhost">
   <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.48">
-    <root id="1">
-      <DefaultCasing>exact</DefaultCasing>
-      <DefaultEngine>InnoDB</DefaultEngine>
-      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
-      <Grants>auth|schema||auth||ALTER|G
-auth|schema||auth||ALTER ROUTINE|G
-auth|schema||auth||CREATE|G
-auth|schema||auth||CREATE ROUTINE|G
-auth|schema||auth||CREATE TEMPORARY TABLES|G
-auth|schema||auth||CREATE VIEW|G
-auth|schema||auth||DELETE|G
-auth|schema||auth||DROP|G
-auth|schema||auth||EVENT|G
-auth|schema||auth||EXECUTE|G
-auth|schema||auth||INDEX|G
-auth|schema||auth||INSERT|G
-auth|schema||auth||LOCK TABLES|G
-auth|schema||auth||REFERENCES|G
-auth|schema||auth||SELECT|G
-auth|schema||auth||SHOW VIEW|G
-auth|schema||auth||TRIGGER|G
-auth|schema||auth||UPDATE|G
-test|schema||auth||ALTER|G
-test|schema||auth||ALTER ROUTINE|G
-test|schema||auth||CREATE|G
-test|schema||auth||CREATE ROUTINE|G
-test|schema||auth||CREATE TEMPORARY TABLES|G
-test|schema||auth||CREATE VIEW|G
-test|schema||auth||DELETE|G
-test|schema||auth||DROP|G
-test|schema||auth||EVENT|G
-test|schema||auth||EXECUTE|G
-test|schema||auth||INDEX|G
-test|schema||auth||INSERT|G
-test|schema||auth||LOCK TABLES|G
-test|schema||auth||REFERENCES|G
-test|schema||auth||SELECT|G
-test|schema||auth||SHOW VIEW|G
-test|schema||auth||TRIGGER|G
-test|schema||auth||UPDATE|G</Grants>
-      <ServerVersion>8.0.33</ServerVersion>
-    </root>
+    <root id="1"/>
     <collation id="2" parent="1" name="armscii8_bin">
       <Charset>armscii8</Charset>
     </collation>
