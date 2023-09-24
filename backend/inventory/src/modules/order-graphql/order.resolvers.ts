@@ -14,8 +14,8 @@ export class OrderResolvers {
     }
     ResolveReference
     @ResolveField('items')
-    async orders(@Parent() order: Order, @Context() context: any): Promise<Order> {
-        this.logger.info(`Getting inventory by item ids ${JSON.stringify(order)} | ${JSON.stringify(context)}`);
+    async orders(@Parent() order: Order, @Context('itemIds') itemIds: string[]): Promise<Order> {
+        this.logger.info(`Getting inventory by item ids ${JSON.stringify(order)} | ${JSON.stringify(itemIds)}`);
         const inventory = await this.inventoryService.getInventoryByIDs(order.itemIds);
         return {
             id: '1',
