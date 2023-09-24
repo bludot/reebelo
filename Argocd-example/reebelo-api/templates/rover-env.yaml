@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    kubed.appscode.com/sync: "sync-configmaps=true"
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+  name: {{ .Values.name }}-publish-schema-configmap
+data:
+    APOLLO_KEY: "service:James-Trotters-Team-67chs7:EmMaHjFR4hcLEkRNp53rCA"

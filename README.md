@@ -22,6 +22,10 @@ to get the items in the order.
 Below you can see the differnce in GraphQL vs RestAPI
 ![diagram](./Diagram.png)
 
+### Deployment
+The backend is deployed in a kubernetes cluster using helm charts. The ArgoCD repo is in a private repo but you can see
+a subset of the files at [here](./Argocd-example). The helm chart is in the reebelo-api folder.
+
 ### Auth
 This service handles signing up users, refreshing tokens, and signing in users. It uses JWT for authentication and 
 randomly generated refresh tokens. Due to time constraint, only this service has tests. 

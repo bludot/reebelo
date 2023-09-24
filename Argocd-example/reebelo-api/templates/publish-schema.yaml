@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.name }}-publish-schema
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 5
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+        - name: {{ .Values.name }}-publish-schema
+          image: "worksome/rover:latest"
+          command: ["sh"]
+          args:
+            - "-c"
+            - "rover subgraph introspect http://{{ .Values.name }}.reebelo.svc.cluster.local/graphql --header \"x-is-signature-valid: true\" | rover --log trace subgraph publish James-Trotters-Team-67chs7@current --name {{.Values.name}} --routing-url=http://{{ .Values.name }}.reebelo.svc.cluster.local/graphql --convert --schema -"
+          envFrom:
+            - configMapRef:
+                name: "{{ .Values.name }}-publish-schema-configmap"
+      restartPolicy: OnFailure
+  ttlSecondsAfterFinished: 600

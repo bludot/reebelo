@@ -1,0 +1,6 @@
+image:
+  name: harbor.floret.dev/reebelo/reebelo-inventory
+  tag: 0.0.2
+  pullPolicy: IfNotPresent
+name: reebelo-inventory
+dbName: inventory

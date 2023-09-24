@@ -1,0 +1,6 @@
+image:
+  name: harbor.floret.dev/reebelo/reebelo-order
+  tag: 0.0.2
+  pullPolicy: IfNotPresent
+name: reebelo-order
+dbName: order

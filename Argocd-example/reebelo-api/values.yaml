@@ -1,0 +1,5 @@
+image:
+  name: harbor.floret.dev/reebelo/reebelo-auth
+  tag: 0.0.1
+  pullPolicy: IfNotPresent
+name: reebelo-auth
