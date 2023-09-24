@@ -1,3 +1,5 @@
-type Order @key(fields: "itemIds") @key(fields: "quantity") {
+type Order @key(fields: "itemIds quantity") {
     id: String! @external
+    itemIds: [String] @external
+    quantity: [Int] @external
 }

@@ -14,7 +14,7 @@ type Inventory @key(fields: "id") @key(fields: "name") {
     updatedAt: Date!
 }
 
-extend type Order @key(fields: "itemIds") @key(fields: "quantity") {
+extend type Order @key(fields: "itemIds quantity") {
     itemIds: [String] @external
     quantity: [Int] @external
     items: [Inventory!]!
