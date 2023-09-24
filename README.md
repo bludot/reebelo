@@ -7,7 +7,6 @@ Currently there are two sepoaratly deployed systems:
 * Frontend
   * Deployed on vercel (https://reebelo.vercel.app/orders)
 
-
 ## Backend
 The backend consists of 3 services (auth, inventory, order). They are all microservices built with NestJS Framework. The
 reason for using NestJS is familiarity and I personally like how well structured it is. Additionally, if this was built
