@@ -3,28 +3,28 @@
 ## Setup
 Currently there are two sepoaratly deployed systems: 
 * Backend
-  * Deployed in kubernetes cluster with ArgoCD and using helm charts.
+  * Deployed in kubernetes cluster with ArgoCD and using helm charts. (https://reebelo.floretos.com/graphql)
 * Frontend
-  * Deployed on vercel
+  * Deployed on vercel (https://reebelo.vercel.app/orders)
 
 
 ## Backend
 The backend consists of 3 services (auth, inventory, order). They are all microservices built with NestJS Framework. The
 reason for using NestJS is familiarity and I personally like how well structured it is. Additionally, if this was built
-as a monolith, it is very easy to break apart if you follow their philosophy of using modules. As a transport layer, I
-have used GraphQL. The reason for this is the ease of use for microservices. Just publish the schmea to apollo studio
-and it will redirect queries/mutations to the right service. Additionally, it is very easy to completly have separation
-of concerns between other microservices. Notice I have defined `items` type in inventory which doesnt need to know 
-anything about `Order` except that its a type and will provide `itemIds` and `quantity`. Orders service has no idea
-about the Inventory Service. With RestAPI, you would need to call the inventory service when you call the order service
-to get the items in the order. 
+as a monolith, it would be very easy to break apart into microservices if you follow their philosophy of using modules. 
+As a transport layer, I have used GraphQL. The reason for this is the ease of use for microservices. Just publish the 
+schmea to apollo studio and it will redirect queries/mutations to the right service. Essentially a free BFF.
+Additionally, it is very easy to completely have separation of concerns between other microservices. Notice that I have 
+defined `items` type in inventory which doesnt need to know anything about `Order` except that its a type and will 
+provide `itemIds` and `quantity`. Orders service has no idea about the Inventory Service. With RestAPI, you would need 
+to call the inventory service when you call the order service to get the items in the order. 
 
 Below you can see the differnce in GraphQL vs RestAPI
 ![diagram](./Diagram.png)
 
 ### Deployment
 The backend is deployed in a kubernetes cluster using helm charts. The ArgoCD repo is in a private repo but you can see
-a subset of the files at [here](./Argocd-example). The helm chart is in the reebelo-api folder.
+a subset of the files at [./Argocd-example](./Argocd-example). The helm chart is in the reebelo-api folder.
 
 ### Auth
 This service handles signing up users, refreshing tokens, and signing in users. It uses JWT for authentication and 
