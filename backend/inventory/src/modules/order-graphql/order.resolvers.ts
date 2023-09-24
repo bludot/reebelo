@@ -12,31 +12,29 @@ export class OrderResolvers {
         private readonly inventoryService: InventoryService,
     ) {
     }
+
     ResolveReference
+
     @ResolveField('items')
-    async orders(@Parent() order: Order): Promise<Order> {
+    async orders(@Parent() order: Order): Promise<Inventory[]> {
         this.logger.info(`Getting inventory by item ids `);
         const itemIds = order.itemIds.filter((item) => item !== null);
         const quantity = order.quantity.filter((item) => item !== null);
         const inventory = await this.inventoryService.getInventoryByIDs(itemIds);
         this.logger.info(`got inventory by item ids ${inventory}`);
-        return {
-            id: '1',
-            itemIds: itemIds,
-            items: inventory.map((inventory, index) => ({
-                id: inventory.id,
-                name: inventory.name,
-                description: inventory.description,
-                price: inventory.price,
-                quantity: quantity[index],
-                category: inventory.category,
-                image: inventory.image,
-                createdAt: inventory.createdAt,
-                updatedAt: inventory.updatedAt,
-            })),
-            quantity: quantity,
+        return inventory.map((inventory, index) => ({
+            id: inventory.id,
+            name: inventory.name,
+            description: inventory.description,
+            price: inventory.price,
+            quantity: quantity[index],
+            category: inventory.category,
+            image: inventory.image,
+            createdAt: inventory.createdAt,
+            updatedAt: inventory.updatedAt,
+        }))
 
-        }
+
     }
 
 
