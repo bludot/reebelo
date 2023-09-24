@@ -1,0 +1,156 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reebelo-apollo-router
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: reebelo
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: router
+    repoURL: ghcr.io/apollographql/helm-charts
+    targetRevision: 1.15.1
+    helm:
+      values: |
+        replicaCount: 2
+
+        # -- See https://www.apollographql.com/docs/router/configuration/overview#configuration-file for yaml structure
+        router:
+          configuration:
+            supergraph:
+              listen: 0.0.0.0:5000
+              path: /graphql
+              introspection: true
+              defer_support: false
+            health_check:
+              listen: 0.0.0.0:8088
+   
+            cors:
+              allow_any_origin: true
+            csrf:
+              required_headers:
+                - apollographql-client-name
+                - apollographql-client-version
+                - x-remote-ip
+                - x-user-agent
+                - origin
+            headers:
+              all:
+                request:
+                  - propagate:
+                      named: x-user-id
+                  - propagate:
+                      named: x-token-type
+                  - propagate:
+                      named: x-token-purpose
+                  - propagate:
+                      named: x-user-agent
+                  - propagate:
+                      named: x-remote-ip
+                  - propagate:
+                      named: apollographql-client-name
+                  - propagate:
+                      named: apollographql-client-version
+                  - propagate:
+                      named: x-raw-auth-token
+                  - propagate:
+                      named: origin
+                  - propagate:
+                      named: authorization
+                  - propagate:
+                      matching: ^x-datadog.*
+          args:
+            - --hot-reload
+
+        managedFederation:
+          # -- If using managed federation, the graph API key to identify router to Studio
+          apiKey: service:James-Trotters-Team-67chs7:EmMaHjFR4hcLEkRNp53rCA
+          # -- If using managed federation, use existing Secret which stores the graph API key instead of creating a new one.
+          # If set along `managedFederation.apiKey`, a secret with the graph API key will be created using this parameter as name
+        #  existingSecret: service:GetWeed-API:5BZFoOquGEFcvhwLKBBV_w
+          # -- If using managed federation, the variant of which graph to use
+          graphRef: "James-Trotters-Team-67chs7@current"
+
+        # An array of extra environmental variables
+        # Example:
+        # extraEnvVars:
+        #   - name: APOLLO_ROUTER_SUPERGRAPH_PATH
+        #     value: /etc/apollo/supergraph.yaml
+        #   - name: APOLLO_ROUTER_LOG
+        #     value: debug
+        #
+        extraEnvVars: []
+        extraEnvVarsCM: ''
+        extraEnvVarsSecret: ''
+
+        extraVolumes: []
+        extraVolumeMounts: []
+
+        image:
+          repository: ghcr.io/apollographql/router
+          pullPolicy: IfNotPresent
+          # Overrides the image tag whose default is the chart appVersion.
+        #  tag: ""
+
+        containerPorts:
+          # -- If you override the port in `router.configuration.server.listen` then make sure to match the listen port here
+          http: 5000
+
+        imagePullSecrets: []
+
+        serviceAccount:
+          # Specifies whether a service account should be created
+          create: true
+          # Annotations to add to the service account
+          annotations: {}
+          # The name of the service account to use.
+          # If not set and create is true, a name is generated using the fullname template
+          name: "apollo-router-sa"
+
+        podAnnotations: {}
+
+        podSecurityContext: {}
+        # fsGroup: 2000
+
+        securityContext: {}
+          # capabilities:
+          #   drop:
+          #   - ALL
+          # readOnlyRootFilesystem: true
+          # runAsNonRoot: true
+        # runAsUser: 1000
+
+        service:
+          type: ClusterIP
+          port: 80
+
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+
+        autoscaling:
+          enabled: true
+          minReplicas: 2
+          maxReplicas: 10
+          targetCPUUtilizationPercentage: 80
+          targetMemoryUtilizationPercentage: 80
+
+        nodeSelector: {}
+
+        tolerations: []
+
+        affinity: {}
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

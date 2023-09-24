@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reebelo-mysql-auth
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: mysql
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 9.10.9
+    helm:
+      releaseName: mysql
+      values: |
+        nameOverride: "reebelo-auth"
+        fullnameOverride: "reebelo-auth"
+        auth:
+          rootPassword: "mysecretpassword"
+          database: "auth"
+          username: "auth"
+          password: "auth"
+
+        global:
+          storageClass: cstor-csi-disk
+        primary:
+          persistence:
+            size: 1Gi
+        secondary:
+          persistence:
+            size: 1Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: datalayer
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true
