@@ -1,44 +1,58 @@
 "use client";
 import {useQuery} from "react-query";
 import {useEffect} from "react";
-import {apiMessagesByParentQuery, apiTicketByIdQuery} from "@/api/queries";
-import {Message, Ticket} from "@/gql/graphql";
-import {TicketDetails} from "@/components/TicketDetails/TicketDeatils";
-import MessageBox from "@/components/MessageBox/MessageBox";
+import {apiGetItemByIdQuery,} from "@/api/queries";
+import {Inventory,} from "@/gql/graphql";
+import {ItemDetails} from "@/components/ItemDetails/ItemDetails";
+import Card from "@/components/Card/Card";
+import {CartItem, useCartStore} from "@/stores/cart";
 
-export default function TicketPage({params}: { params: { id: string } }) {
+export default function ItemPage({params}: { params: { id: string } }) {
 
     useEffect(() => {
         console.log("TicketPage useEffect")
     }, [])
-    const {data, isLoading, isError, error} = useQuery<Ticket>({
-        ...apiTicketByIdQuery(params.id),
+    console.log("THE ID", params.id)
+    const {data, isLoading, isError, error} = useQuery<Inventory>({
+        ...apiGetItemByIdQuery(params.id.toString()),
     })
+    const cartStore = useCartStore()
 
-    const {
-        data: messages,
-        isLoading: messagesIsLoading,
-        isError: messagesIsError,
-        error: messagesError,
-        refetch: refetch
-    } = useQuery<Message[]>({
-        ...apiMessagesByParentQuery(params.id),
-    })
+    function addToCart(inventoryItem: Inventory) {
+        const foundItem = cartStore.items.find(cartItem => cartItem.id === inventoryItem.id)
+
+        const item: CartItem = {
+            id: inventoryItem.id,
+            name: inventoryItem.name,
+            price: inventoryItem.price,
+            quantity: foundItem ? foundItem.quantity + 1 : 1,
+
+        }
+
+        cartStore.addItem(item)
+    }
+
     return (
         <div>
 
 
             {isLoading && <div>Loading...</div>}
             {isError && <div>{!!error}</div>}
-            {data && <TicketDetails ticket={data} reloadMessages={() => {
-                refetch()
-            }}/>}
-            {messagesIsLoading && <div>Loading...</div>}
-            {messagesIsError && <div>{!!messagesError}</div>}
-            {messages && messages.map(message => {
-                return <MessageBox key={message.id} message={message}/>
-            })
-            }
+
+            {data && (
+                <Card className={"flex flex-col items-center"}>
+                    <ItemDetails item={data}/>
+                    <button className={"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}
+                            onClick={() => {
+                                addToCart(data)
+
+                            }}>
+                        Add to cart
+                    </button>
+
+                </Card>
+            )}
+
 
         </div>
     )

@@ -13,7 +13,7 @@ export default function LoginPage() {
         apiSignInMutation().mutationFn,
         {
             onSuccess: () => {
-                router.push("/dashboard")
+                router.push("/store")
             }
         }
     )

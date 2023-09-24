@@ -40,9 +40,10 @@ export default function VerifyAuth() {
         }, false)) {
             router.push("/login")
         }
-    }, [profileIsLoading, isError, pathName])
+    }, [profileIsLoading, isError, pathName, router])
 
-
+    const handleRefresh: HandleRefresh = HandleRefresh.getInstance()
+    handleRefresh.start()
     return (
         <></>
     )

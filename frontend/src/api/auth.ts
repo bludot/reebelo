@@ -24,6 +24,11 @@ export class HandleRefresh {
     }
 
     start() {
+
+        if (interval) {
+            return
+        }
+        console.log("starting refresh token process")
         // 30 seconds
         interval = setInterval(refreshTokenProcess, 30000)
     }
@@ -41,11 +46,13 @@ function refreshTokenProcess() {
     const exp = localStorage.getItem('exp')
     const refreshToken = localStorage.getItem('refreshToken')
     AuthClient.request<RefreshTokensMutation>(refreshTokensMutation, {refreshToken}).then((data) => {
+        console.log("refreshed token")
         localStorage.setItem("jwt", data.refreshToken.token)
         localStorage.setItem("refreshToken", data.refreshToken.refreshToken)
         localStorage.setItem("exp", data.refreshToken.exp.toString())
         AuthClient.setHeader('Authorization', `Bearer ${localStorage.getItem('jwt')}`)
     }).catch(() => {
+        console.log("error refreshing token")
         clearInterval(interval as NodeJS.Timeout)
         localStorage.removeItem('jwt')
         localStorage.removeItem('refreshToken')

@@ -31,4 +31,69 @@ export const profileQuery = graphql(/* GraphQL */`
     }
 `)
 
-export const
+export const getAllItemsQuery = graphql(/* GraphQL */`
+    query getAllItems {
+        inventory {
+            id
+            name
+            description
+            price
+            quantity
+            category
+            image
+            createdAt
+            updatedAt
+        }
+    }
+`)
+
+export const getInventoryItemQuery = graphql(/* GraphQL */`
+    query getInventory($inventoryByIdId: String!) {
+        inventoryById(id: $inventoryByIdId) {
+            id
+            name
+            description
+            price
+            quantity
+            image
+            category
+            misc
+            createdAt
+            updatedAt
+        }
+
+    }
+`)
+
+
+export const createOrderMutation = graphql(/* GraphQL */`
+    mutation createOrder($input: CreateOrderInput!) {
+        createOrder(input: $input) {
+            id
+            userId
+            itemIds
+            quantity
+            status
+        }
+    }
+`)
+
+export const getOrdersByUserIdQuery = graphql(/* GraphQL */`
+    query getOrdersByUserId($id: String!) {
+        ordersByUser(userId: $id) {
+            id
+            userId
+            address
+            itemIds
+            status
+            items {
+                id
+                name
+                image
+                description
+                price
+            }
+            quantity
+        }
+    }
+`)
