@@ -15,8 +15,8 @@ type Inventory @key(fields: "id") @key(fields: "name") {
 }
 
 extend type Order @key(fields: "itemIds") @key(fields: "quantity") {
-    itemIds: [String!]! @external
-    quantity: [Int!]! @external
+    itemIds: [String] @external
+    quantity: [Int] @external
     items: [Inventory!]!
 }
 
