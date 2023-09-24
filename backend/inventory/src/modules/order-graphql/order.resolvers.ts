@@ -14,24 +14,27 @@ export class OrderResolvers {
     }
     ResolveReference
     @ResolveField('items')
-    async orders(@Parent() order: Order, @Context('itemIds') itemIds: string[]): Promise<Order> {
-        this.logger.info(`Getting inventory by item ids ${JSON.stringify(order)} | ${JSON.stringify(itemIds)}`);
-        const inventory = await this.inventoryService.getInventoryByIDs(order.itemIds);
+    async orders(@Parent() order: Order): Promise<Order> {
+        this.logger.info(`Getting inventory by item ids `);
+        const itemIds = order.itemIds.filter((item) => item !== null);
+        const quantity = order.quantity.filter((item) => item !== null);
+        const inventory = await this.inventoryService.getInventoryByIDs(itemIds);
+        this.logger.info(`got inventory by item ids ${inventory}`);
         return {
             id: '1',
-            itemIds: order.itemIds,
+            itemIds: itemIds,
             items: inventory.map((inventory, index) => ({
                 id: inventory.id,
                 name: inventory.name,
                 description: inventory.description,
                 price: inventory.price,
-                quantity: order.quantity[index],
+                quantity: quantity[index],
                 category: inventory.category,
                 image: inventory.image,
                 createdAt: inventory.createdAt,
                 updatedAt: inventory.updatedAt,
             })),
-            quantity: order.quantity,
+            quantity: quantity,
 
         }
     }
